@@ -703,8 +703,8 @@ static void _yr_ac_print_automaton_state(
     child_state = child_state->siblings;
   }
 
-  printf("%p childs:%d depth:%d failure:%p",
-         state, child_count, state->depth, state->failure);
+  printf("%p childs:%d depth:%d failure:%p input: %c",
+         state, child_count, state->depth, state->failure, state->input);
 
   match = state->matches;
 
@@ -843,13 +843,17 @@ int yr_ac_add_string(
   YR_AC_MATCH* new_match;
 
   // For each atom create the states in the automaton.
-
+  #ifdef PROFILING_ENABLED
+  printf("Print chosen atoms:\n");
+  #endif
   while (atom != NULL)
   {
     state = automaton->root;
-
     for (i = 0; i < atom->atom.length; i++)
     {
+        #ifdef PROFILING_ENABLED
+        printf("%c", atom->atom.bytes[i]);
+        #endif
       next_state = _yr_ac_next_state(state, atom->atom.bytes[i]);
 
       if (next_state == NULL)
@@ -859,9 +863,11 @@ int yr_ac_add_string(
         if (next_state == NULL)
           return ERROR_INSUFFICIENT_MEMORY;
       }
-
       state = next_state;
     }
+    #ifdef PROFILING_ENABLED
+    printf("\n");
+    #endif
 
     result = yr_arena_allocate_struct(
         matches_arena,

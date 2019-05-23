@@ -688,6 +688,11 @@ static int _yr_compiler_compile_rules(
       sizeof(YR_EXTERNAL_VARIABLE),
       NULL);
 
+  #ifdef PROFILING_ENABLED
+  printf("Aho Corasick automaton:\n");
+  yr_ac_print_automaton(compiler->automaton);
+  #endif
+
   // Write Aho-Corasick automaton to arena.
   result = yr_ac_compile(
       compiler->automaton,

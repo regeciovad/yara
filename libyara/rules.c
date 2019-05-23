@@ -176,23 +176,24 @@ YR_API int yr_rules_define_string_variable(
 
 #ifdef PROFILING_ENABLED
 void yr_rules_print_profiling_info(
-    YR_RULES* rules)
+	YR_RULES* rules)
 {
-  YR_RULE* rule;
+	YR_RULE* rule;
 
-  printf("\n===== PROFILING INFORMATION =====\n\n");
+	yr_rules_foreach(rules, rule)
+	{
+		printf("Extra information about atoms:\n");
+		printf("Number of atoms: %d\n", rule->num_atoms);
+		printf("Time cost for rule: %ld\n", rule->time_cost);
+		printf("Time cost for rules: %ld\n", rules->time_cost);
+		printf(
+			"Name: %s, identifier: %s, time cost: %0.3f%%\n",
+			rule->ns->name,
+			rule->identifier,
+			(float)rule->time_cost / rules->time_cost * 100);
+	}
 
-  yr_rules_foreach(rules, rule)
-  {
-    printf(
-        "%s:%s: %" PRIu64 " (%0.3f%%)\n",
-        rule->ns->name,
-        rule->identifier,
-        rule->time_cost,
-        (float) rule->time_cost / rules->time_cost * 100);
-  }
-
-  printf("\n=================================\n");
+	printf("\n=================================\n");
 }
 #endif
 

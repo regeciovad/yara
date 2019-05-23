@@ -1189,6 +1189,10 @@ int main(
     cr.errors = 0;
     cr.warnings = 0;
 
+    #ifdef PROFILING_ENABLED
+    printf("\n===== PROFILING INFORMATION =====\n\n");
+    #endif
+
     yr_compiler_set_callback(compiler, print_compiler_error, &cr);
 
     if (!compile_files(compiler, argc, argv))

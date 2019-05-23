@@ -405,6 +405,10 @@ static int _yr_parser_write_string(
           min_atom_quality);
   }
 
+  #ifdef PROFILING_ENABLED
+  printf("String:%s\n", compiler->lex_buf);
+  #endif
+
   if (result == ERROR_SUCCESS)
   {
     // Add the string to Aho-Corasick automaton.
@@ -703,6 +707,11 @@ int yr_parser_reduce_string_declaration(
     if (result != ERROR_SUCCESS)
       goto _exit;
   }
+
+  #ifdef PROFILING_ENABLED
+  printf("Threshold: %d\n", compiler->atoms_config.quality_warning_threshold);
+  printf("The quality of %s: %d\n", (*string)->identifier, min_atom_quality);
+  #endif
 
   if (min_atom_quality < compiler->atoms_config.quality_warning_threshold)
   {

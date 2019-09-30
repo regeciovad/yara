@@ -194,8 +194,8 @@ void test_heuristic_quality()
   assert_true_expr(q01X203   > q0001);
   assert_true_expr(q01X203   < q010203);
   assert_true_expr(q01X203   == q010X03);
-  assert_true_expr(q01XX03   <= q0102);
-  assert_true_expr(q01XX03   < q010X03);
+  assert_true_expr(q01XX03   >= q0102);
+  assert_true_expr(q01XX03   <= q010X03);
   assert_true_expr(q01XX03   < q010203);
   assert_true_expr(q010X0X   > q01);
   assert_true_expr(q010X0X   < q010203);
@@ -515,11 +515,11 @@ void test_atom_choose()
     });
 
     assert_re_atoms("a..d", 1, (struct atom[]) {
-      {1, {0x61}},
+      {4, {0x61, 0x00, 0x00, 0x64}},
     });
 
     assert_re_atoms("a..de", 1, (struct atom[]) {
-      {2, {0x64, 0x65}},
+      {4, {0x61, 0x00, 0x00, 0x64}},
     });
 
     assert_re_atoms("abcd.efgh", 1, (struct atom[]) {
@@ -570,7 +570,7 @@ void test_atom_choose()
 
     // Test case for issue #1025
     assert_hex_atoms("{?? 11 22 33 ?? 55 66 }", 1, (struct atom[]) {
-      {3, {0x11, 0x22, 0x33}},
+      {4, {0x00, 0x11, 0x22, 0x33}},
     });
 }
 

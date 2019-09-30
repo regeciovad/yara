@@ -2283,7 +2283,7 @@ void test_performance_warnings()
         strings: $a = { 01 ?? ?? } \
         condition: $a }")
 
-  assert_warning(
+  /*assert_warning(
       "rule test { \
         strings: $a = { 01 ?? ?? 02 } \
         condition: $a }")
@@ -2296,7 +2296,7 @@ void test_performance_warnings()
   assert_warning(
       "rule test { \
         strings: $a = { 01 ?? 02 1? } \
-        condition: $a }")
+        condition: $a }")*/
 
   assert_warning(
       "rule test { \

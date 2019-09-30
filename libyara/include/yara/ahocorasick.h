@@ -50,6 +50,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ((YR_AC_TRANSITION) \
     ((((YR_AC_TRANSITION) state) << YR_AC_SLOT_OFFSET_BITS) | (code)))
 
+#define CHAR_IN_BITMAP(bmp, chr) \
+  ((bmp)[(chr) >> 3] & 1 << ((chr) & 7))
+
 
 int yr_ac_automaton_create(
     YR_AC_AUTOMATON** automaton);

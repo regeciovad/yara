@@ -130,6 +130,7 @@ int yr_atoms_heuristic_quality(
     {
       case 0x00:
         masked_nibbles += 2;
+        quality += 6;
         break;
       case 0x0F:
         masked_nibbles += 1;
@@ -582,7 +583,7 @@ static int _yr_atoms_choose(
 
     memcpy(&item->atom, &node->atom, sizeof(YR_ATOM));
 
-    shift = _yr_atoms_trim(&item->atom);
+    shift = 0;
 
     if (item->atom.length > 0)
     {
@@ -785,7 +786,7 @@ static int _yr_atoms_case_insensitive(
       for (i = 0; i < atom_length; i++)
       {
         new_atom->atom.bytes[i] = atoms_cursor[i];
-        new_atom->atom.mask[i] = 0xFF;
+        new_atom->atom.mask[i] = atom->atom.mask[i];
       }
 
       new_atom->atom.length = atom_length;
@@ -894,7 +895,10 @@ static int _yr_atoms_wide(
     for (i = 0; i < atom->atom.length; i++)
     {
       if (i * 2 < YR_MAX_ATOM_LENGTH)
+      {
         new_atom->atom.bytes[i * 2] = atom->atom.bytes[i];
+        new_atom->atom.mask[i * 2] = atom->atom.mask[i];
+      }
       else
         break;
     }
@@ -1013,7 +1017,7 @@ static int _yr_atoms_extract_from_re(
       if (n > 0)
       {
         make_atom_from_re_nodes(atom, n, recent_re_nodes);
-        shift = _yr_atoms_trim(&atom);
+        shift = 0;
         quality = config->get_atom_quality(config, &atom);
 
         FAIL_ON_NULL_WITH_CLEANUP(
@@ -1063,7 +1067,7 @@ static int _yr_atoms_extract_from_re(
           else if (best_quality < YR_MAX_ATOM_QUALITY)
           {
             make_atom_from_re_nodes(atom, n, recent_re_nodes);
-            shift = _yr_atoms_trim(&atom);
+            shift = 0;
             quality = config->get_atom_quality(config, &atom);
 
             if (quality > best_quality)
@@ -1303,12 +1307,6 @@ static int _yr_atoms_expand_wildcards(
 
       switch(atom->atom.mask[i])
       {
-        case 0x00:
-          expanded = true;
-          s = 0x00;
-          e = 0xFF;
-          break;
-
         case 0x0F:
           expanded = true;
           s = atom->atom.bytes[i];

@@ -185,6 +185,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     ((x) != NULL ? (x)->type == EXTERNAL_VARIABLE_TYPE_NULL : true)
 
 
+// The types of states in AC automaton
+#define YR_ATOM_TYPE_ANY                     0x00
+#define YR_ATOM_TYPE_CLASS                   0xCC
+#define YR_ATOM_TYPE_MASKED_LITERAL_0F       0x0F
+#define YR_ATOM_TYPE_MASKED_LITERAL_F0       0xF0
+#define YR_ATOM_TYPE_LITERAL                 0xFF
+
+
 typedef struct RE RE;
 typedef struct RE_AST RE_AST;
 typedef struct RE_NODE RE_NODE;
@@ -199,6 +207,8 @@ typedef struct YR_AC_STATE YR_AC_STATE;
 typedef struct YR_AC_AUTOMATON YR_AC_AUTOMATON;
 typedef struct YR_AC_MATCH_TABLE_ENTRY YR_AC_MATCH_TABLE_ENTRY;
 typedef struct YR_AC_TABLES YR_AC_TABLES;
+
+typedef struct YR_STATE_LIST_ITEM YR_STATE_LIST_ITEM;
 
 typedef struct YR_NAMESPACE YR_NAMESPACE;
 typedef struct YR_META YR_META;
@@ -401,6 +411,13 @@ struct YR_AC_TABLES
   YR_AC_MATCH_TABLE matches;
 };
 
+struct YR_STATE_LIST_ITEM
+{
+  YR_AC_STATE* state;
+  YR_AC_STATE* parent;
+  YR_STATE_LIST_ITEM* next;
+};
+
 
 typedef struct YARA_RULES_FILE_HEADER
 {
@@ -551,6 +568,8 @@ struct YR_AC_STATE
 {
   uint8_t depth;
   uint8_t input;
+  uint8_t type;
+  YR_BITMASK bitmap[YR_BITMAP_SIZE];
 
   uint32_t t_table_slot;
 
